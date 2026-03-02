@@ -23,12 +23,15 @@ namespace DigitalWallet.Infrastructure.Data.Services
                 //get the wallet by id
                 var walletRepo = unitOfWork.Repository<IWalletRepository>();
                 var wallet = await walletRepo.ReadWalletByIdAsync(walletId);
-
                 //update
                 wallet = wallet with { Balance = wallet.Balance + amount };
 
                 //save
                 await walletRepo.UpdateWalletAsync(wallet);
+
+                //Log the operation:
+                await unitOfWork.Repository<ITransactionRepository>().CreateTransactionAsync
+                    (new TransactionEntity(Guid.Empty,walletId,amount,Domain.Enums.TransactionTypeEnum.Deposit,DateTime.Now));
 
                 unitOfWork.Commit();
             }

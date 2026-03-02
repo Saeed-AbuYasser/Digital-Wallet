@@ -28,6 +28,11 @@ namespace DigitalWallet.Infrastructure.Data.Services
                 //save
                 await walletRepo.UpdateWalletAsync(wallet);
 
+
+                //Log the operation:
+                await unitOfWork.Repository<ITransactionRepository>().CreateTransactionAsync
+                    (new TransactionEntity(Guid.Empty, walletId, amount, Domain.Enums.TransactionTypeEnum.Withdraw, DateTime.Now));
+
                 unitOfWork.Commit();
             }
             catch
