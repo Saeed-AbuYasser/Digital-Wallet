@@ -37,7 +37,7 @@ namespace DigitalWallet.Infrastructure.Data.Repositories
         }
         public async Task<IEnumerable<TransactionEntity>> ReadAllTransactionsAsync()
         {
-            const string sql = "Select (Id, WalletId, Amount, Type, CreatedAt) From Transactions;";
+            const string sql = "Select Id, WalletId, Amount, Type, CreatedAt From Transactions;";
             List<TransactionEntity> transactions = new();
             try
             {
@@ -47,7 +47,7 @@ namespace DigitalWallet.Infrastructure.Data.Repositories
                     {
                         while (reader.Read())
                         {
-                            TransactionTypeEnum type = (TransactionTypeEnum)Enum.Parse(typeof(TransactionTypeEnum), reader.GetString(0));
+                            TransactionTypeEnum type = (TransactionTypeEnum)Enum.Parse(typeof(TransactionTypeEnum), reader.GetString(3));
                             transactions.Add(new(reader.GetGuid(0), reader.GetGuid(1), reader.GetDecimal(2), type, reader.GetDateTime(4)));
                         }
                     }
